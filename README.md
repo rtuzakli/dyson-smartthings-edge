@@ -6,6 +6,13 @@ cloud or the internet.
 
 Source and issues: https://github.com/rtuzakli/dyson-smartthings-edge
 
+## Install
+
+1. Open the channel invite on a computer or phone and sign in with your Samsung account:
+   **https://bestow-regional.api.smartthings.com/invite/JVMkDzbDJ2GO**
+2. Enroll your hub, then choose **Available drivers > Dyson Humidify Cool Local > Install**.
+3. Follow [Adding a Dyson](#adding-a-dyson) below: Scan nearby, then paste the local password.
+
 **Tested with:** Dyson Purifier Humidify+Cool, product type 358K. Scan nearby also adds other Dyson
 models it finds on the network, but they are untested: their fields and functions (for example heating
 on Hot+Cool models) may differ, and some rows may stay empty.
