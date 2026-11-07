@@ -1,7 +1,7 @@
 name: Dyson Humidify Cool Local
-packageKey: dyson-humidify-cool-local-lan
+packageKey: rtuzakli-dyson-local
 permissions:
   discovery: {}
   lan: {}
-description: "Local MQTT control for Dyson Humidify+Cool (358K) purifier humidifier fans."
+description: "Local MQTT control for the Dyson Purifier Humidify+Cool (358K). github.com/rtuzakli/dyson-smartthings-edge"
 vendorSupportInformation: "https://github.com/rtuzakli/dyson-smartthings-edge/issues"
