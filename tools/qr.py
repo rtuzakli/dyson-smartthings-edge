@@ -1,8 +1,29 @@
 """Minimal QR code encoder (stdlib only) for showing the MQTT password on a terminal.
 
 Supports what the tool needs: byte mode, version 5, error correction level L (up to 106 bytes;
-a Dyson password is 88). Follows ISO/IEC 18004 and Project Nayuki's reference implementation;
-mask 0 is used throughout (any mask gives a valid code).
+a Dyson password is 88); mask 0 is used throughout (any mask gives a valid code). Follows
+ISO/IEC 18004. The Reed-Solomon, function-pattern, format-bit and codeword-placement code is
+adapted from Project Nayuki's QR Code generator library, used under the MIT License below.
+
+QR Code generator library (Python)
+Copyright (c) Project Nayuki. (MIT License)
+https://www.nayuki.io/page/qr-code-generator-library
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+- The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+- The Software is provided "as is", without warranty of any kind, express or
+  implied, including but not limited to the warranties of merchantability,
+  fitness for a particular purpose and noninfringement. In no event shall the
+  authors or copyright holders be liable for any claim, damages or other
+  liability, whether in an action of contract, tort or otherwise, arising from,
+  out of or in connection with the Software or the use or other dealings in the
+  Software.
 """
 
 VERSION, SIZE = 5, 37

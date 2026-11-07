@@ -1,4 +1,14 @@
-# Dyson Humidify+Cool local SmartThings Edge driver
+# Unofficial local SmartThings Edge driver for the Dyson Purifier Humidify+Cool
+
+> **Unofficial.** This project is not affiliated with, endorsed by or supported by Dyson or
+> Samsung. Dyson and Dyson Purifier Humidify+Cool are trademarks of Dyson Technology Limited;
+> SmartThings is a trademark of Samsung Electronics. The names are used only to say what the driver
+> works with.
+>
+> **Use at your own risk.** It talks to the Dyson through an undocumented local protocol, and the
+> password tool uses Dyson's undocumented cloud API (identifying itself as the Dyson app). Either
+> can stop working with a Dyson firmware or API change, and Dyson may rate-limit or block clients
+> it does not recognise. Provided "as is", see [LICENSE](LICENSE).
 
 A SmartThings Edge driver for the Dyson Purifier Humidify+Cool (product type 358K). It runs on the
 SmartThings hub and talks to the Dyson's local MQTT broker on port 1883. It does not use the Dyson
@@ -9,8 +19,8 @@ Source and issues: https://github.com/rtuzakli/dyson-smartthings-edge
 ## Install
 
 1. Open the channel invite on a computer or phone and sign in with your Samsung account:
-   **https://bestow-regional.api.smartthings.com/invite/JVMkDzbDJ2GO**
-2. Enroll your hub, then choose **Available drivers > Dyson Humidify Cool Local > Install**.
+   **https://bestow-regional.api.smartthings.com/invite/gV2qd1avJOM9**
+2. Enroll your hub, then choose **Available drivers > Dyson Humidify Cool Local (unofficial) > Install**.
 3. Follow [Adding a Dyson](#adding-a-dyson) below: Scan nearby, then paste the local password.
 
 **Tested with:** Dyson Purifier Humidify+Cool, product type 358K. Scan nearby also adds other Dyson
@@ -355,3 +365,13 @@ several clients at once, so the hub stays connected while this runs.
 - **Password:** keep the real password out of `profiles/dyson-358k.yml` except for one install on a new
   hub (see "Where the MQTT password lives"); driver versions uploaded with it stay stored on
   SmartThings. Never create a channel invite while a password is in the profile.
+
+## Acknowledgements
+
+- Protocol knowledge (MQTT fields, credential decryption, cloud endpoints) from the open-source
+  [libdyson-neon](https://github.com/libdyson-wg/libdyson-neon) and
+  [libdyson-rest](https://github.com/cmgrayb/libdyson-rest) projects. No code is copied from them.
+- `tools/qr.py` adapts parts of Project Nayuki's
+  [QR Code generator library](https://www.nayuki.io/page/qr-code-generator-library) (MIT License;
+  the notice is in the file).
+
