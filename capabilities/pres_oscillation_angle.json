@@ -1,0 +1,102 @@
+{
+  "dashboard": {
+    "states": [
+      {
+        "label": "{{lowerAngle.value}}°-{{upperAngle.value}}°"
+      }
+    ],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Start angle",
+      "displayType": "slider",
+      "slider": {
+        "range": [
+          5,
+          355
+        ],
+        "step": 5,
+        "value": "lowerAngle.value",
+        "valueType": "integer",
+        "command": "setLowerAngle",
+        "argumentType": "integer"
+      }
+    },
+    {
+      "label": "End angle",
+      "displayType": "slider",
+      "slider": {
+        "range": [
+          5,
+          355
+        ],
+        "step": 5,
+        "value": "upperAngle.value",
+        "valueType": "integer",
+        "command": "setUpperAngle",
+        "argumentType": "integer"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Start angle",
+        "displayType": "numberField",
+        "numberField": {
+          "value": "lowerAngle.value",
+          "valueType": "integer",
+          "range": [
+            5,
+            355
+          ]
+        }
+      },
+      {
+        "label": "End angle",
+        "displayType": "numberField",
+        "numberField": {
+          "value": "upperAngle.value",
+          "valueType": "integer",
+          "range": [
+            5,
+            355
+          ]
+        }
+      }
+    ],
+    "actions": [
+      {
+        "label": "Start angle",
+        "displayType": "slider",
+        "slider": {
+          "range": [
+            5,
+            355
+          ],
+          "step": 5,
+          "value": "lowerAngle.value",
+          "valueType": "integer",
+          "command": "setLowerAngle",
+          "argumentType": "integer"
+        }
+      },
+      {
+        "label": "End angle",
+        "displayType": "slider",
+        "slider": {
+          "range": [
+            5,
+            355
+          ],
+          "step": 5,
+          "value": "upperAngle.value",
+          "valueType": "integer",
+          "command": "setUpperAngle",
+          "argumentType": "integer"
+        }
+      }
+    ]
+  }
+}

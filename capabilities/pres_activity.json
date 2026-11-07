@@ -1,0 +1,33 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Purifier",
+      "displayType": "state",
+      "state": {
+        "label": "{{purifier.value}}"
+      }
+    },
+    {
+      "label": "Humidifier",
+      "displayType": "state",
+      "state": {
+        "label": "{{humidifier.value}}"
+      }
+    },
+    {
+      "label": "Night mode",
+      "displayType": "state",
+      "state": {
+        "label": "{{nightMode.value}}"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [],
+    "actions": []
+  }
+}

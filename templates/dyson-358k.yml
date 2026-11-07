@@ -1,0 +1,152 @@
+# Template with placeholder device values (committed). tools/dyson_credentials.py creates
+# profiles/dyson-358k.yml (git-ignored, holds the password) from it.
+name: dyson-358k
+components:
+  - id: main
+    label: "Purifier"
+    capabilities:
+      - id: switch
+        version: 1
+      - id: fabrictitle08390.attention
+        version: 1
+      - id: fabrictitle08390.activity
+        version: 1
+      - id: fabrictitle08390.airQuality
+        version: 1
+      - id: airPurifierFanMode
+        version: 1
+      - id: fanSpeedPercent
+        version: 1
+      - id: temperatureMeasurement
+        version: 1
+      - id: relativeHumidityMeasurement
+        version: 1
+      - id: airQualityHealthConcern
+        version: 1
+      - id: dustSensor
+        version: 1
+      - id: tvocMeasurement
+        version: 1
+      - id: tvocHealthConcern
+        version: 1
+      - id: nitrogenDioxideMeasurement
+        version: 1
+      - id: formaldehydeMeasurement
+        version: 1
+      - id: formaldehydeHealthConcern
+        version: 1
+      - id: refresh
+        version: 1
+    categories:
+      - name: AirPurifier
+  - id: humidifier
+    label: "Humidifier"
+    capabilities:
+      - id: switch
+        version: 1
+      - id: fabrictitle08390.autoHumidity
+        version: 1
+      - id: fabrictitle08390.targetHumidity
+        version: 1
+      - id: mode
+        version: 1
+    categories:
+      - name: Humidifier
+  - id: oscillation
+    label: "Oscillation"
+    capabilities:
+      - id: mode
+        version: 1
+      - id: fabrictitle08390.oscillationAngle
+        version: 1
+  - id: airflow
+    label: "Airflow direction"
+    capabilities:
+      - id: mode
+        version: 1
+  - id: nightMode
+    label: "Night mode"
+    capabilities:
+      - id: switch
+        version: 1
+  - id: sleepTimer
+    label: "Sleep timer"
+    capabilities:
+      - id: mode
+        version: 1
+  - id: monitoring
+    label: "Continuous monitoring"
+    capabilities:
+      - id: switch
+        version: 1
+  - id: waterHardness
+    label: "Water hardness"
+    capabilities:
+      - id: mode
+        version: 1
+  - id: filter
+    label: "Filter"
+    capabilities:
+      - id: filterState
+        version: 1
+      - id: filterStatus
+        version: 1
+  - id: deepClean
+    label: "Deep clean"
+    capabilities:
+      - id: filterState
+        version: 1
+      - id: filterStatus
+        version: 1
+  - id: status
+    label: "Device status"
+    capabilities:
+      - id: hardwareFault
+        version: 1
+      - id: signalStrength
+        version: 1
+metadata:
+  mnmn: SmartThingsCommunity
+  vid: aa97c972-f380-3e65-8385-c9088ec8ed5f
+  ocfDeviceType: oic.d.airpurifier
+preferences:
+  - title: "Dyson IP address"
+    name: ipAddress
+    description: "Optional. The driver finds the Dyson on the network by itself; this address is used only if that fails"
+    required: false
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 7
+      maxLength: 15
+      default: "0.0.0.0"
+  - title: "Serial number"
+    name: serialNumber
+    description: "Leave as SERIAL: the driver uses the serial found by Scan nearby. Only set it to pin a specific Dyson"
+    required: false
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 3
+      maxLength: 32
+      default: "SERIAL"
+  - title: "Product type"
+    name: productType
+    description: "Leave as auto: the driver detects the model. Only set it (e.g. 358K) if detection fails"
+    required: false
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 3
+      maxLength: 8
+      default: "auto"
+  - title: "Local MQTT password"
+    name: localPassword
+    description: "Paste the password from tools/dyson_credentials.py (its QR code). Not the Wi-Fi or Dyson account password"
+    required: true
+    preferenceType: string
+    definition:
+      stringType: password
+      minLength: 4
+      maxLength: 128
+      default: "password"

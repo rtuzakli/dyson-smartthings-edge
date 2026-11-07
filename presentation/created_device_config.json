@@ -1,0 +1,673 @@
+{
+    "mnmn": "SmartThingsCommunity",
+    "vid": "aa97c972-f380-3e65-8385-c9088ec8ed5f",
+    "version": "0.0.1",
+    "type": "profile",
+    "dashboard": {
+        "states": [
+            {
+                "component": "main",
+                "capability": "airQualityHealthConcern",
+                "version": 1,
+                "idx": 0,
+                "group": "main",
+                "values": [],
+                "composite": false
+            },
+            {
+                "component": "main",
+                "capability": "temperatureMeasurement",
+                "version": 1,
+                "idx": 0,
+                "group": "main",
+                "values": [],
+                "composite": false
+            }
+        ],
+        "actions": [
+            {
+                "component": "main",
+                "capability": "switch",
+                "version": 1,
+                "idx": 0,
+                "group": "main",
+                "inline": null
+            }
+        ],
+        "basicPlus": []
+    },
+    "detailView": [
+        {
+            "component": "main",
+            "capability": "fabrictitle08390.attention",
+            "version": 1,
+            "values": [],
+            "patch": [],
+            "visibleCondition": {
+                "value": "message.value",
+                "valueType": "string",
+                "operator": "DOES_NOT_EQUAL",
+                "operand": "None",
+                "component": "main",
+                "capability": "fabrictitle08390.attention",
+                "version": 1,
+                "hideOnUnmatch": true
+            }
+        },
+        {
+            "component": "main",
+            "capability": "fabrictitle08390.activity",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "fabrictitle08390.airQuality",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "temperatureMeasurement",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "relativeHumidityMeasurement",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "dustSensor",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "tvocMeasurement",
+            "version": 1,
+            "values": [],
+            "patch": [
+                {
+                    "op": "replace",
+                    "path": "/0/displayType",
+                    "value": "state"
+                },
+                {
+                    "op": "remove",
+                    "path": "/0/slider",
+                    "value": null
+                },
+                {
+                    "op": "add",
+                    "path": "/0/state",
+                    "value": {
+                        "label": "{{tvocLevel.value}}"
+                    }
+                }
+            ]
+        },
+        {
+            "component": "main",
+            "capability": "nitrogenDioxideMeasurement",
+            "version": 1,
+            "values": [],
+            "patch": [
+                {
+                    "op": "replace",
+                    "path": "/0/displayType",
+                    "value": "state"
+                },
+                {
+                    "op": "remove",
+                    "path": "/0/slider",
+                    "value": null
+                },
+                {
+                    "op": "add",
+                    "path": "/0/state",
+                    "value": {
+                        "label": "{{nitrogenDioxide.value}}"
+                    }
+                }
+            ]
+        },
+        {
+            "component": "main",
+            "capability": "formaldehydeMeasurement",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "switch",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "airPurifierFanMode",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "main",
+            "capability": "fanSpeedPercent",
+            "version": 1,
+            "values": [],
+            "patch": [],
+            "visibleCondition": {
+                "value": "airPurifierFanMode.value",
+                "valueType": "string",
+                "operator": "DOES_NOT_EQUAL",
+                "operand": "auto",
+                "component": "main",
+                "capability": "airPurifierFanMode",
+                "version": 1,
+                "hideOnUnmatch": true
+            }
+        },
+        {
+            "component": "humidifier",
+            "capability": "switch",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "humidifier",
+            "capability": "fabrictitle08390.autoHumidity",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "humidifier",
+            "capability": "fabrictitle08390.targetHumidity",
+            "version": 1,
+            "values": [],
+            "patch": [],
+            "visibleCondition": {
+                "value": "autoMode.value",
+                "valueType": "string",
+                "operator": "EQUALS",
+                "operand": "off",
+                "component": "humidifier",
+                "capability": "fabrictitle08390.autoHumidity",
+                "version": 1,
+                "hideOnUnmatch": true
+            }
+        },
+        {
+            "component": "oscillation",
+            "capability": "mode",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "oscillation",
+            "capability": "fabrictitle08390.oscillationAngle",
+            "version": 1,
+            "values": [],
+            "patch": [],
+            "visibleCondition": {
+                "value": "mode.value",
+                "valueType": "string",
+                "operator": "EQUALS",
+                "operand": "Custom",
+                "component": "oscillation",
+                "capability": "mode",
+                "version": 1,
+                "hideOnUnmatch": true
+            }
+        },
+        {
+            "component": "airflow",
+            "capability": "mode",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "monitoring",
+            "capability": "switch",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "nightMode",
+            "capability": "switch",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "sleepTimer",
+            "capability": "mode",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "status",
+            "capability": "hardwareFault",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "status",
+            "capability": "signalStrength",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "filter",
+            "capability": "filterState",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "filter",
+            "capability": "filterStatus",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "deepClean",
+            "capability": "filterState",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "deepClean",
+            "capability": "filterStatus",
+            "version": 1,
+            "values": [],
+            "patch": []
+        },
+        {
+            "component": "waterHardness",
+            "capability": "mode",
+            "version": 1,
+            "values": [],
+            "patch": []
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "component": "main",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "airPurifierFanMode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "fanSpeedPercent",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "temperatureMeasurement",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "relativeHumidityMeasurement",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "airQualityHealthConcern",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "dustSensor",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "tvocMeasurement",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "tvocHealthConcern",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "nitrogenDioxideMeasurement",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "formaldehydeMeasurement",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "formaldehydeHealthConcern",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "fabrictitle08390.autoHumidity",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "fabrictitle08390.targetHumidity",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "oscillation",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "oscillation",
+                "capability": "fabrictitle08390.oscillationAngle",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "airflow",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "nightMode",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "sleepTimer",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "monitoring",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "waterHardness",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "filter",
+                "capability": "filterState",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "filter",
+                "capability": "filterStatus",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "deepClean",
+                "capability": "filterState",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "deepClean",
+                "capability": "filterStatus",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "status",
+                "capability": "hardwareFault",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "status",
+                "capability": "signalStrength",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            }
+        ],
+        "actions": [
+            {
+                "component": "main",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "airPurifierFanMode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "fanSpeedPercent",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
+                "capability": "refresh",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "humidifier",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "oscillation",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "oscillation",
+                "capability": "fabrictitle08390.oscillationAngle",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "airflow",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "nightMode",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "sleepTimer",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "monitoring",
+                "capability": "switch",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "waterHardness",
+                "capability": "mode",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "filter",
+                "capability": "filterState",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "deepClean",
+                "capability": "filterState",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            }
+        ]
+    },
+    "presentationId": "aa97c972-f380-3e65-8385-c9088ec8ed5f",
+    "manufacturerName": "SmartThingsCommunity"
+}

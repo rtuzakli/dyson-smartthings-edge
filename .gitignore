@@ -1,0 +1,3 @@
+*.zip
+profiles/dyson-358k.yml
+__pycache__/

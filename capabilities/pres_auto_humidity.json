@@ -1,0 +1,597 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Auto",
+      "displayType": "list",
+      "list": {
+        "command": {
+          "name": "setAutoMode",
+          "alternatives": [
+            {
+              "key": "on",
+              "value": "On",
+              "type": "active"
+            },
+            {
+              "key": "off",
+              "value": "Off",
+              "type": "inactive"
+            }
+          ],
+          "argumentType": "string"
+        },
+        "state": {
+          "value": "display.value",
+          "valueType": "string",
+          "alternatives": [
+            {
+              "key": "Off",
+              "value": "Off",
+              "type": "inactive"
+            },
+            {
+              "key": "On",
+              "value": "On",
+              "type": "active"
+            },
+            {
+              "key": "On (0%)",
+              "value": "On (0%)",
+              "type": "active"
+            },
+            {
+              "key": "On (1%)",
+              "value": "On (1%)",
+              "type": "active"
+            },
+            {
+              "key": "On (2%)",
+              "value": "On (2%)",
+              "type": "active"
+            },
+            {
+              "key": "On (3%)",
+              "value": "On (3%)",
+              "type": "active"
+            },
+            {
+              "key": "On (4%)",
+              "value": "On (4%)",
+              "type": "active"
+            },
+            {
+              "key": "On (5%)",
+              "value": "On (5%)",
+              "type": "active"
+            },
+            {
+              "key": "On (6%)",
+              "value": "On (6%)",
+              "type": "active"
+            },
+            {
+              "key": "On (7%)",
+              "value": "On (7%)",
+              "type": "active"
+            },
+            {
+              "key": "On (8%)",
+              "value": "On (8%)",
+              "type": "active"
+            },
+            {
+              "key": "On (9%)",
+              "value": "On (9%)",
+              "type": "active"
+            },
+            {
+              "key": "On (10%)",
+              "value": "On (10%)",
+              "type": "active"
+            },
+            {
+              "key": "On (11%)",
+              "value": "On (11%)",
+              "type": "active"
+            },
+            {
+              "key": "On (12%)",
+              "value": "On (12%)",
+              "type": "active"
+            },
+            {
+              "key": "On (13%)",
+              "value": "On (13%)",
+              "type": "active"
+            },
+            {
+              "key": "On (14%)",
+              "value": "On (14%)",
+              "type": "active"
+            },
+            {
+              "key": "On (15%)",
+              "value": "On (15%)",
+              "type": "active"
+            },
+            {
+              "key": "On (16%)",
+              "value": "On (16%)",
+              "type": "active"
+            },
+            {
+              "key": "On (17%)",
+              "value": "On (17%)",
+              "type": "active"
+            },
+            {
+              "key": "On (18%)",
+              "value": "On (18%)",
+              "type": "active"
+            },
+            {
+              "key": "On (19%)",
+              "value": "On (19%)",
+              "type": "active"
+            },
+            {
+              "key": "On (20%)",
+              "value": "On (20%)",
+              "type": "active"
+            },
+            {
+              "key": "On (21%)",
+              "value": "On (21%)",
+              "type": "active"
+            },
+            {
+              "key": "On (22%)",
+              "value": "On (22%)",
+              "type": "active"
+            },
+            {
+              "key": "On (23%)",
+              "value": "On (23%)",
+              "type": "active"
+            },
+            {
+              "key": "On (24%)",
+              "value": "On (24%)",
+              "type": "active"
+            },
+            {
+              "key": "On (25%)",
+              "value": "On (25%)",
+              "type": "active"
+            },
+            {
+              "key": "On (26%)",
+              "value": "On (26%)",
+              "type": "active"
+            },
+            {
+              "key": "On (27%)",
+              "value": "On (27%)",
+              "type": "active"
+            },
+            {
+              "key": "On (28%)",
+              "value": "On (28%)",
+              "type": "active"
+            },
+            {
+              "key": "On (29%)",
+              "value": "On (29%)",
+              "type": "active"
+            },
+            {
+              "key": "On (30%)",
+              "value": "On (30%)",
+              "type": "active"
+            },
+            {
+              "key": "On (31%)",
+              "value": "On (31%)",
+              "type": "active"
+            },
+            {
+              "key": "On (32%)",
+              "value": "On (32%)",
+              "type": "active"
+            },
+            {
+              "key": "On (33%)",
+              "value": "On (33%)",
+              "type": "active"
+            },
+            {
+              "key": "On (34%)",
+              "value": "On (34%)",
+              "type": "active"
+            },
+            {
+              "key": "On (35%)",
+              "value": "On (35%)",
+              "type": "active"
+            },
+            {
+              "key": "On (36%)",
+              "value": "On (36%)",
+              "type": "active"
+            },
+            {
+              "key": "On (37%)",
+              "value": "On (37%)",
+              "type": "active"
+            },
+            {
+              "key": "On (38%)",
+              "value": "On (38%)",
+              "type": "active"
+            },
+            {
+              "key": "On (39%)",
+              "value": "On (39%)",
+              "type": "active"
+            },
+            {
+              "key": "On (40%)",
+              "value": "On (40%)",
+              "type": "active"
+            },
+            {
+              "key": "On (41%)",
+              "value": "On (41%)",
+              "type": "active"
+            },
+            {
+              "key": "On (42%)",
+              "value": "On (42%)",
+              "type": "active"
+            },
+            {
+              "key": "On (43%)",
+              "value": "On (43%)",
+              "type": "active"
+            },
+            {
+              "key": "On (44%)",
+              "value": "On (44%)",
+              "type": "active"
+            },
+            {
+              "key": "On (45%)",
+              "value": "On (45%)",
+              "type": "active"
+            },
+            {
+              "key": "On (46%)",
+              "value": "On (46%)",
+              "type": "active"
+            },
+            {
+              "key": "On (47%)",
+              "value": "On (47%)",
+              "type": "active"
+            },
+            {
+              "key": "On (48%)",
+              "value": "On (48%)",
+              "type": "active"
+            },
+            {
+              "key": "On (49%)",
+              "value": "On (49%)",
+              "type": "active"
+            },
+            {
+              "key": "On (50%)",
+              "value": "On (50%)",
+              "type": "active"
+            },
+            {
+              "key": "On (51%)",
+              "value": "On (51%)",
+              "type": "active"
+            },
+            {
+              "key": "On (52%)",
+              "value": "On (52%)",
+              "type": "active"
+            },
+            {
+              "key": "On (53%)",
+              "value": "On (53%)",
+              "type": "active"
+            },
+            {
+              "key": "On (54%)",
+              "value": "On (54%)",
+              "type": "active"
+            },
+            {
+              "key": "On (55%)",
+              "value": "On (55%)",
+              "type": "active"
+            },
+            {
+              "key": "On (56%)",
+              "value": "On (56%)",
+              "type": "active"
+            },
+            {
+              "key": "On (57%)",
+              "value": "On (57%)",
+              "type": "active"
+            },
+            {
+              "key": "On (58%)",
+              "value": "On (58%)",
+              "type": "active"
+            },
+            {
+              "key": "On (59%)",
+              "value": "On (59%)",
+              "type": "active"
+            },
+            {
+              "key": "On (60%)",
+              "value": "On (60%)",
+              "type": "active"
+            },
+            {
+              "key": "On (61%)",
+              "value": "On (61%)",
+              "type": "active"
+            },
+            {
+              "key": "On (62%)",
+              "value": "On (62%)",
+              "type": "active"
+            },
+            {
+              "key": "On (63%)",
+              "value": "On (63%)",
+              "type": "active"
+            },
+            {
+              "key": "On (64%)",
+              "value": "On (64%)",
+              "type": "active"
+            },
+            {
+              "key": "On (65%)",
+              "value": "On (65%)",
+              "type": "active"
+            },
+            {
+              "key": "On (66%)",
+              "value": "On (66%)",
+              "type": "active"
+            },
+            {
+              "key": "On (67%)",
+              "value": "On (67%)",
+              "type": "active"
+            },
+            {
+              "key": "On (68%)",
+              "value": "On (68%)",
+              "type": "active"
+            },
+            {
+              "key": "On (69%)",
+              "value": "On (69%)",
+              "type": "active"
+            },
+            {
+              "key": "On (70%)",
+              "value": "On (70%)",
+              "type": "active"
+            },
+            {
+              "key": "On (71%)",
+              "value": "On (71%)",
+              "type": "active"
+            },
+            {
+              "key": "On (72%)",
+              "value": "On (72%)",
+              "type": "active"
+            },
+            {
+              "key": "On (73%)",
+              "value": "On (73%)",
+              "type": "active"
+            },
+            {
+              "key": "On (74%)",
+              "value": "On (74%)",
+              "type": "active"
+            },
+            {
+              "key": "On (75%)",
+              "value": "On (75%)",
+              "type": "active"
+            },
+            {
+              "key": "On (76%)",
+              "value": "On (76%)",
+              "type": "active"
+            },
+            {
+              "key": "On (77%)",
+              "value": "On (77%)",
+              "type": "active"
+            },
+            {
+              "key": "On (78%)",
+              "value": "On (78%)",
+              "type": "active"
+            },
+            {
+              "key": "On (79%)",
+              "value": "On (79%)",
+              "type": "active"
+            },
+            {
+              "key": "On (80%)",
+              "value": "On (80%)",
+              "type": "active"
+            },
+            {
+              "key": "On (81%)",
+              "value": "On (81%)",
+              "type": "active"
+            },
+            {
+              "key": "On (82%)",
+              "value": "On (82%)",
+              "type": "active"
+            },
+            {
+              "key": "On (83%)",
+              "value": "On (83%)",
+              "type": "active"
+            },
+            {
+              "key": "On (84%)",
+              "value": "On (84%)",
+              "type": "active"
+            },
+            {
+              "key": "On (85%)",
+              "value": "On (85%)",
+              "type": "active"
+            },
+            {
+              "key": "On (86%)",
+              "value": "On (86%)",
+              "type": "active"
+            },
+            {
+              "key": "On (87%)",
+              "value": "On (87%)",
+              "type": "active"
+            },
+            {
+              "key": "On (88%)",
+              "value": "On (88%)",
+              "type": "active"
+            },
+            {
+              "key": "On (89%)",
+              "value": "On (89%)",
+              "type": "active"
+            },
+            {
+              "key": "On (90%)",
+              "value": "On (90%)",
+              "type": "active"
+            },
+            {
+              "key": "On (91%)",
+              "value": "On (91%)",
+              "type": "active"
+            },
+            {
+              "key": "On (92%)",
+              "value": "On (92%)",
+              "type": "active"
+            },
+            {
+              "key": "On (93%)",
+              "value": "On (93%)",
+              "type": "active"
+            },
+            {
+              "key": "On (94%)",
+              "value": "On (94%)",
+              "type": "active"
+            },
+            {
+              "key": "On (95%)",
+              "value": "On (95%)",
+              "type": "active"
+            },
+            {
+              "key": "On (96%)",
+              "value": "On (96%)",
+              "type": "active"
+            },
+            {
+              "key": "On (97%)",
+              "value": "On (97%)",
+              "type": "active"
+            },
+            {
+              "key": "On (98%)",
+              "value": "On (98%)",
+              "type": "active"
+            },
+            {
+              "key": "On (99%)",
+              "value": "On (99%)",
+              "type": "active"
+            },
+            {
+              "key": "On (100%)",
+              "value": "On (100%)",
+              "type": "active"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Auto",
+        "displayType": "list",
+        "list": {
+          "alternatives": [
+            {
+              "key": "on",
+              "value": "On",
+              "type": "active"
+            },
+            {
+              "key": "off",
+              "value": "Off",
+              "type": "inactive"
+            }
+          ],
+          "value": "autoMode.value",
+          "valueType": "string"
+        }
+      }
+    ],
+    "actions": [
+      {
+        "label": "Auto",
+        "displayType": "list",
+        "list": {
+          "alternatives": [
+            {
+              "key": "on",
+              "value": "On",
+              "type": "active"
+            },
+            {
+              "key": "off",
+              "value": "Off",
+              "type": "inactive"
+            }
+          ],
+          "command": "setAutoMode",
+          "argumentType": "string"
+        }
+      }
+    ]
+  }
+}

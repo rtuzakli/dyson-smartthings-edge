@@ -1,0 +1,28 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Problem",
+      "displayType": "state",
+      "state": {
+        "label": "{{message.value}}"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Problem",
+        "displayType": "textField",
+        "textField": {
+          "value": "message.value",
+          "valueType": "string"
+        }
+      }
+    ],
+    "actions": []
+  }
+}

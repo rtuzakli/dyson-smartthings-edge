@@ -1,0 +1,57 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Target",
+      "displayType": "slider",
+      "slider": {
+        "range": [
+          30,
+          70
+        ],
+        "step": 5,
+        "unit": "target.unit",
+        "command": "setTarget",
+        "argumentType": "integer",
+        "value": "target.value",
+        "valueType": "integer"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Target",
+        "displayType": "numberField",
+        "numberField": {
+          "value": "target.value",
+          "valueType": "integer",
+          "unit": "target.unit",
+          "range": [
+            30,
+            70
+          ]
+        }
+      }
+    ],
+    "actions": [
+      {
+        "label": "Target",
+        "displayType": "slider",
+        "slider": {
+          "range": [
+            30,
+            70
+          ],
+          "step": 5,
+          "unit": "target.unit",
+          "command": "setTarget",
+          "argumentType": "integer"
+        }
+      }
+    ]
+  }
+}

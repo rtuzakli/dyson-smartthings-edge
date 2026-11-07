@@ -1,0 +1,54 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Air quality",
+      "displayType": "state",
+      "state": {
+        "label": "{{overall.value}}"
+      }
+    },
+    {
+      "label": "PM2.5",
+      "displayType": "state",
+      "state": {
+        "label": "{{fineDust.value}}"
+      }
+    },
+    {
+      "label": "PM10",
+      "displayType": "state",
+      "state": {
+        "label": "{{dust.value}}"
+      }
+    },
+    {
+      "label": "TVOC",
+      "displayType": "state",
+      "state": {
+        "label": "{{voc.value}}"
+      }
+    },
+    {
+      "label": "NO₂",
+      "displayType": "state",
+      "state": {
+        "label": "{{nitrogenDioxide.value}}"
+      }
+    },
+    {
+      "label": "Formaldehyde",
+      "displayType": "state",
+      "state": {
+        "label": "{{formaldehyde.value}}"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [],
+    "actions": []
+  }
+}

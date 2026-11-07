@@ -1,0 +1,71 @@
+{
+  "name": "Oscillation Angle",
+  "attributes": {
+    "lowerAngle": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 355
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "value"
+        ]
+      },
+      "enumCommands": [],
+      "setter": "setLowerAngle"
+    },
+    "upperAngle": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 355
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "value"
+        ]
+      },
+      "enumCommands": [],
+      "setter": "setUpperAngle"
+    }
+  },
+  "commands": {
+    "setLowerAngle": {
+      "name": "setLowerAngle",
+      "arguments": [
+        {
+          "name": "angle",
+          "optional": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 355
+          }
+        }
+      ]
+    },
+    "setUpperAngle": {
+      "name": "setUpperAngle",
+      "arguments": [
+        {
+          "name": "angle",
+          "optional": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 355
+          }
+        }
+      ]
+    }
+  }
+}
