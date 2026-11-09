@@ -1,6 +1,6 @@
 {
     "mnmn": "SmartThingsCommunity",
-    "vid": "aa97c972-f380-3e65-8385-c9088ec8ed5f",
+    "vid": "b286361a-7181-3588-9fa2-aa6924164358",
     "version": "0.0.1",
     "type": "profile",
     "dashboard": {
@@ -314,6 +314,14 @@
         "conditions": [
             {
                 "component": "main",
+                "capability": "fabrictitle08390.attentionAlert",
+                "version": 1,
+                "values": [],
+                "patch": [],
+                "exclusion": []
+            },
+            {
+                "component": "main",
                 "capability": "switch",
                 "version": 1,
                 "values": [],
@@ -437,7 +445,64 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Auto",
+                                "value": "Auto",
+                                "type": "active"
+                            },
+                            {
+                                "key": "30%",
+                                "value": "30%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "35%",
+                                "value": "35%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "40%",
+                                "value": "40%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45%",
+                                "value": "45%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "50%",
+                                "value": "50%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "55%",
+                                "value": "55%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "60%",
+                                "value": "60%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "65%",
+                                "value": "65%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "70%",
+                                "value": "70%",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -445,7 +510,39 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Off",
+                                "value": "Off",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45°",
+                                "value": "45°",
+                                "type": "active"
+                            },
+                            {
+                                "key": "90°",
+                                "value": "90°",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Breeze",
+                                "value": "Breeze",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Custom",
+                                "value": "Custom",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -461,7 +558,24 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Front",
+                                "value": "Front",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Back",
+                                "value": "Back",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -477,7 +591,54 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Off",
+                                "value": "Off",
+                                "type": "active"
+                            },
+                            {
+                                "key": "15 min",
+                                "value": "15 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "30 min",
+                                "value": "30 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45 min",
+                                "value": "45 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "1 h",
+                                "value": "1 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "2 h",
+                                "value": "2 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "4 h",
+                                "value": "4 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "8 h",
+                                "value": "8 h",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -493,7 +654,29 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Soft",
+                                "value": "Soft",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Medium",
+                                "value": "Medium",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Hard",
+                                "value": "Hard",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -591,7 +774,64 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Auto",
+                                "value": "Auto",
+                                "type": "active"
+                            },
+                            {
+                                "key": "30%",
+                                "value": "30%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "35%",
+                                "value": "35%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "40%",
+                                "value": "40%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45%",
+                                "value": "45%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "50%",
+                                "value": "50%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "55%",
+                                "value": "55%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "60%",
+                                "value": "60%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "65%",
+                                "value": "65%",
+                                "type": "active"
+                            },
+                            {
+                                "key": "70%",
+                                "value": "70%",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -599,7 +839,39 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Off",
+                                "value": "Off",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45°",
+                                "value": "45°",
+                                "type": "active"
+                            },
+                            {
+                                "key": "90°",
+                                "value": "90°",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Breeze",
+                                "value": "Breeze",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Custom",
+                                "value": "Custom",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -615,7 +887,24 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Front",
+                                "value": "Front",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Back",
+                                "value": "Back",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -631,7 +920,54 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Off",
+                                "value": "Off",
+                                "type": "active"
+                            },
+                            {
+                                "key": "15 min",
+                                "value": "15 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "30 min",
+                                "value": "30 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "45 min",
+                                "value": "45 min",
+                                "type": "active"
+                            },
+                            {
+                                "key": "1 h",
+                                "value": "1 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "2 h",
+                                "value": "2 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "4 h",
+                                "value": "4 h",
+                                "type": "active"
+                            },
+                            {
+                                "key": "8 h",
+                                "value": "8 h",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -647,7 +983,29 @@
                 "capability": "mode",
                 "version": 1,
                 "values": [],
-                "patch": [],
+                "patch": [
+                    {
+                        "op": "replace",
+                        "path": "/0/list/alternatives",
+                        "value": [
+                            {
+                                "key": "Soft",
+                                "value": "Soft",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Medium",
+                                "value": "Medium",
+                                "type": "active"
+                            },
+                            {
+                                "key": "Hard",
+                                "value": "Hard",
+                                "type": "active"
+                            }
+                        ]
+                    }
+                ],
                 "exclusion": []
             },
             {
@@ -668,6 +1026,6 @@
             }
         ]
     },
-    "presentationId": "aa97c972-f380-3e65-8385-c9088ec8ed5f",
+    "presentationId": "b286361a-7181-3588-9fa2-aa6924164358",
     "manufacturerName": "SmartThingsCommunity"
 }

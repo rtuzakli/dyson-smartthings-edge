@@ -20,6 +20,8 @@ local ACTIVITY_ID = NS .. ".activity"
 local AUTO_ID = NS .. ".autoHumidity"
 local TARGET_ID = NS .. ".targetHumidity"
 local ATTENTION_ID = NS .. ".attention"
+-- Attention as detected/clear, so a routine can notify on any problem (dyson.attention_alert).
+local ALERT_ID = NS .. ".attentionAlert"
 local AIR_ID = NS .. ".airQuality"
 -- After a command, the link counts as dead if the Dyson sends nothing for this long.
 local COMMAND_REPLY_SECONDS = 10
@@ -37,6 +39,12 @@ local HEPA_REPLACE_PERCENT = 5
 local HIDDEN = { visibility = { displayed = false } }
 -- Persisted device field: the broker address of the last successful connection.
 local LAST_IP_FIELD = "last_ip"
+-- Unreachable this long: Attention says so and the routine alert goes up. Shorter outages (a Wi-Fi
+-- drop, a Dyson reboot, the first mDNS lookup) only change the text, so they do not notify.
+local OFFLINE_ALERT_SECONDS = 5 * 60
+-- Persisted device field: the problems the routine alert last announced, one per line, so a driver
+-- restart does not announce them again.
+local ALERTED_FIELD = "alerted_problems"
 
 -- device.id -> { gen = n, client = mqtt client or nil, raw = {} (Dyson fields),
 --   last = {} (values sent; cleared for re-sends), logged = {} (log/skip markers; kept) }
@@ -155,24 +163,70 @@ local function on_off(cap, v)
   return v and cap.switch.on() or cap.switch.off()
 end
 
+-- Emits make(value) unless value is what was last sent under component_id.key. Returns true when
+-- the value is in place (sent now or before).
+local function emit_once(device, conn, component_id, key, value, make)
+  if value == nil then return false end
+  local cache_key = component_id .. "." .. key
+  if conn.last[cache_key] == value then return true end
+  -- The hub caches capability definitions; a just-changed custom capability can lack an
+  -- attribute for a while. Skip that value instead of crashing the session.
+  local ok, event = pcall(make, value)
+  if not ok or event == nil then
+    if not conn.logged["skip." .. cache_key] then
+      conn.logged["skip." .. cache_key] = true
+      log.warn("dyson: cannot build event " .. cache_key .. ": " .. tostring(event))
+    end
+    return false
+  end
+  conn.last[cache_key] = value
+  emit(device, component_id, event)
+  return true
+end
+
+local function load_alerted(device)
+  local set = {}
+  for p in tostring(device:get_field(ALERTED_FIELD) or ""):gmatch("[^\n]+") do set[p] = true end
+  return set
+end
+
+-- Attention message, then the routine alert (after the message, so the device page already shows
+-- it when the notification arrives). parts lists the problems in text. raise = false updates only
+-- the message: a connection problem that has not lasted OFFLINE_ALERT_SECONDS yet.
+local function set_attention(device, conn, text, parts, raise)
+  if text == nil then return end
+  emit_once(device, conn, "main", "attention", text, function(v) return capabilities[ATTENTION_ID].message(v) end)
+  if not raise then return end
+  parts = parts or {}
+  local alert = dyson.attention_alert(text)
+  -- A new problem while the alert already says "detected" is sent again as a state change, so
+  -- routines fire for it too (as for a repeated button push).
+  local fresh = alert == dyson.ALERT_DETECTED and dyson.has_new_problem(conn.alerted, parts)
+  if fresh then conn.last["main.attention_alert"] = nil end
+  local in_place = emit_once(device, conn, "main", "attention_alert", alert, function(v)
+    local attr = capabilities[ALERT_ID].alert
+    if fresh then return attr(v, { state_change = true }) end
+    return attr(v)
+  end)
+  if not in_place then return end
+  local set, lines = {}, {}
+  for _, p in ipairs(parts) do
+    if not set[p] then
+      set[p] = true
+      lines[#lines + 1] = p
+    end
+  end
+  conn.alerted = set
+  local joined = table.concat(lines, "\n")
+  if (device:get_field(ALERTED_FIELD) or "") ~= joined then
+    device:set_field(ALERTED_FIELD, joined, { persist = true })
+  end
+end
+
 local function emit_changed(device, conn, d)
   local c = capabilities
   local function once(component_id, key, value, make)
-    if value == nil then return end
-    local cache_key = component_id .. "." .. key
-    if conn.last[cache_key] == value then return end
-    -- The hub caches capability definitions; a just-changed custom capability can lack an
-    -- attribute for a while. Skip that value instead of crashing the session.
-    local ok, event = pcall(make, value)
-    if not ok or event == nil then
-      if not conn.logged["skip." .. cache_key] then
-        conn.logged["skip." .. cache_key] = true
-        log.warn("dyson: cannot build event " .. cache_key .. ": " .. tostring(event))
-      end
-      return
-    end
-    conn.last[cache_key] = value
-    emit(device, component_id, event)
+    emit_once(device, conn, component_id, key, value, make)
   end
 
   once("main", "power", d.power, function(v) return on_off(c.switch, v) end)
@@ -231,7 +285,7 @@ local function emit_changed(device, conn, d)
   once("main", "air_voc", ball(d.level.voc), function(v) return air.voc(v) end)
   once("main", "air_no2", ball(d.level.no2), function(v) return air.nitrogenDioxide(v) end)
   once("main", "air_hcho", ball(d.level.hcho), function(v) return air.formaldehyde(v) end)
-  once("main", "attention", d.warning_text, function(v) return c[ATTENTION_ID].message(v) end)
+  set_attention(device, conn, d.warning_text, d.warning_parts, true)
 
   once("humidifier", "on", d.humidification, function(v) return on_off(c.switch, v) end)
   once("humidifier", "mode", d.humidity_mode, function(v) return c.mode.mode(v) end)
@@ -261,15 +315,6 @@ end
 local function send_request(_, conn, kind)
   if not (conn.client and conn.topics) then return nil, "not connected" end
   return conn.client:publish(conn.topics.command, json.encode(dyson.request(kind, now_iso())))
-end
-
-local function set_attention(device, conn, text)
-  if conn.last["main.attention"] == text then return end
-  local ok, event = pcall(function() return capabilities[ATTENTION_ID].message(text) end)
-  if ok and event then
-    conn.last["main.attention"] = text
-    emit(device, "main", event)
-  end
 end
 
 -- Ask for the state on every candidate model topic; the topic the Dyson answers on names the model.
@@ -353,6 +398,10 @@ local function session(device, conn, gen, host, source)
   send_request(device, conn, dyson.REQUEST_STATE)
   send_request(device, conn, dyson.REQUEST_SENSORS)
   send_request(device, conn, dyson.REQUEST_FAULTS)
+  -- The state reply also refreshes Attention; without one within COMMAND_REPLY_SECONDS the link
+  -- counts as dead, so an old setup or offline message does not stay up on a silent link.
+  conn.awaiting_reply, conn.awaiting_what = os.time(), "state request"
+  conn.down_since = nil
   device:online()
   for field, value in pairs({ [LAST_IP_FIELD] = host, [SERIAL_FIELD] = serial, [MODEL_FIELD] = model }) do
     if device:get_field(field) ~= value then device:set_field(field, value, { persist = true }) end
@@ -371,7 +420,7 @@ local function session(device, conn, gen, host, source)
       break
     end
     if conn.awaiting_reply and os.time() - conn.awaiting_reply >= COMMAND_REPLY_SECONDS then
-      result_err = "no reply to command within " .. COMMAND_REPLY_SECONDS .. " s"
+      result_err = "no reply to " .. (conn.awaiting_what or "command") .. " within " .. COMMAND_REPLY_SECONDS .. " s"
       break
     end
     local due_early = EARLY_RESENDS[early] and os.time() - connected_at >= EARLY_RESENDS[early]
@@ -399,14 +448,17 @@ local function run(device, gen)
     local conn = conns[device.id]
     local problem = setup_problem(device)
     if problem then
-      set_attention(device, conn, problem)
+      set_attention(device, conn, problem, { problem }, true)
       device:offline()
       cosock.socket.sleep(10)
     else
+      -- Connection problem for Attention, and whether it raises the alert at once. A wrong password
+      -- does; "not found" and "model not detected" can be passing, like a dropped link.
+      local text, at_once
       local host, source = resolve_host(device)
       if not host then
         log.warn("dyson: Dyson not found over mDNS and no IP address set")
-        set_attention(device, conn, dyson.SETUP_TEXT.not_found)
+        text = dyson.SETUP_TEXT.not_found
       else
         local ok, err, link_err = pcall(session, device, conn, gen, host, source)
         if not ok then
@@ -414,10 +466,10 @@ local function run(device, gen)
         elseif err == nil and link_err then
           log.warn("dyson: connect to " .. host .. " failed: " .. tostring(link_err))
           if link_err == "model not detected" then
-            set_attention(device, conn, dyson.SETUP_TEXT.no_model)
+            text = dyson.SETUP_TEXT.no_model
           else
-            local text = dyson.setup_text_for_error(link_err)
-            if text then set_attention(device, conn, text) end
+            text = dyson.setup_text_for_error(link_err)
+            at_once = text ~= nil
           end
         else
           backoff = 2
@@ -429,6 +481,10 @@ local function run(device, gen)
       if current and current.gen == gen then
         device:offline()
         current.awaiting_reply = nil
+        current.down_since = current.down_since or os.time()
+        local long = os.time() - current.down_since >= OFFLINE_ALERT_SECONDS
+        if not text and long then text = dyson.SETUP_TEXT.offline end
+        if text then set_attention(device, current, text, { text }, at_once or long) end
         -- Sleep in 1 s steps so a command from the app can trigger an immediate retry.
         local woken = false
         for _ = 1, backoff do
@@ -455,7 +511,7 @@ local function start(_, device)
   local prev = conns[device.id]
   local gen = (prev and prev.gen or 0) + 1
   if prev and prev.client then pcall(function() prev.client:close() end) end
-  conns[device.id] = { gen = gen, raw = {}, last = {}, logged = {} }
+  conns[device.id] = { gen = gen, raw = {}, last = {}, logged = {}, alerted = load_alerted(device) }
   cosock.spawn(function() run(device, gen) end, "dyson-" .. device.id)
 end
 
@@ -484,9 +540,9 @@ local function send_state(device, data)
   -- Ask for the state too: the Dyson always answers that, so silence means the link is dead.
   if ok then ok = send_request(device, conn, dyson.REQUEST_STATE) end
   if not ok then
-    conn.awaiting_reply = 0
+    conn.awaiting_reply, conn.awaiting_what = 0, "command"
   elseif not conn.awaiting_reply then
-    conn.awaiting_reply = os.time()
+    conn.awaiting_reply, conn.awaiting_what = os.time(), "command"
   end
 end
 

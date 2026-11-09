@@ -186,6 +186,8 @@ end
 -- Text of the "Attention" section; the layout hides the section while it equals NO_PROBLEM.
 M.NO_PROBLEM = "None"
 
+-- Returns the Attention text and the list of problems in it (empty for NO_PROBLEM). The text can
+-- be shortened to "<first> and N more"; the list always holds every problem.
 function M.warning_text(err, warn, faults)
   local parts = {}
   for _, k in ipairs(active_faults(faults)) do
@@ -194,10 +196,29 @@ function M.warning_text(err, warn, faults)
   end
   if warn and warn ~= "NONE" then parts[#parts + 1] = M.WARNING_TEXT[warn] or ("Dyson warning " .. warn) end
   if err and err ~= "NONE" then parts[#parts + 1] = M.ERROR_TEXT[err] or ("Dyson error " .. err) end
-  if #parts == 0 then return M.NO_PROBLEM end
+  if #parts == 0 then return M.NO_PROBLEM, parts end
   local text = table.concat(parts, ", ")
   if #text > 80 then text = parts[1] .. string.format(" and %d more", #parts - 1) end
-  return text
+  return text, parts
+end
+
+-- Routine trigger for the Attention section (custom attentionAlert): "detected" while it shows any
+-- message (warnings, errors, setup problems), "clear" while it shows NO_PROBLEM. The message itself
+-- is free text, which routines cannot match reliably.
+M.ALERT_DETECTED, M.ALERT_CLEAR = "detected", "clear"
+
+function M.attention_alert(text)
+  if text == nil then return nil end
+  return text == M.NO_PROBLEM and M.ALERT_CLEAR or M.ALERT_DETECTED
+end
+
+-- True when parts (a list of problem texts) holds one that is not in announced (a set of texts).
+-- A new problem re-announces a "detected" alert, so routines also notify about a second problem.
+function M.has_new_problem(announced, parts)
+  for _, p in ipairs(parts or {}) do
+    if not (announced and announced[p]) then return true end
+  end
+  return false
 end
 
 -- A hardware fault is an error code or a failing *-errors entry; warnings (tank, filter) are not.
@@ -311,7 +332,7 @@ function M.derive(raw)
     out.fault = M.has_error(err, raw.faults)
     out.fault_detail = string.format("error=%s warning=%s faults=%s", tostring(err), tostring(warn),
       table.concat(active_faults(raw.faults), ","))
-    out.warning_text = M.warning_text(err, warn, raw.faults)
+    out.warning_text, out.warning_parts = M.warning_text(err, warn, raw.faults)
   end
   out.now = M.right_now(raw, out)
   out.rssi = num(raw.rssi)
@@ -557,6 +578,7 @@ M.SETUP_TEXT = {
   no_serial = "Serial number missing in Settings",
   no_model = "Model not detected: set Product type in Settings",
   not_found = "Dyson not found on the network",
+  offline = "Dyson not reachable",
 }
 
 function M.setup_text_for_error(err)

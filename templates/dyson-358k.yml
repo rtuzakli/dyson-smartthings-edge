@@ -9,6 +9,8 @@ components:
         version: 1
       - id: fabrictitle08390.attention
         version: 1
+      - id: fabrictitle08390.attentionAlert
+        version: 1
       - id: fabrictitle08390.activity
         version: 1
       - id: fabrictitle08390.airQuality
@@ -107,7 +109,7 @@ components:
         version: 1
 metadata:
   mnmn: SmartThingsCommunity
-  vid: aa97c972-f380-3e65-8385-c9088ec8ed5f
+  vid: b286361a-7181-3588-9fa2-aa6924164358
   ocfDeviceType: oic.d.airpurifier
 preferences:
   - title: "Dyson IP address"

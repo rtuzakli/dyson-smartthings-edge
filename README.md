@@ -27,8 +27,8 @@ Source and issues: https://github.com/rtuzakli/dyson-smartthings-edge
 models it finds on the network, but they are untested: their fields and functions (for example heating
 on Hot+Cool models) may differ, and some rows may stay empty.
 
-Current version: **0.1.20** (`src/driver_version.lua`; the hub log shows it as
-`dyson: driver 0.1.20 connected to ...`). For a release, bump that file and, if the app layout
+Current version: **0.1.22** (`src/driver_version.lua`; the hub log shows it as
+`dyson: driver 0.1.22 connected to ...`). For a release, bump that file and, if the app layout
 changed, create a new device configuration (see "Capabilities and presentations").
 
 ## What the colors mean
@@ -55,6 +55,21 @@ changed, create a new device configuration (see "Capabilities and presentations"
 **Attention** has no ball: it appears only when something needs you (e.g. "Water tank removed",
 "Enter the local MQTT password in Settings") and is hidden otherwise.
 
+## Notifications
+
+To get a phone notification on any problem (water tank empty or removed, filter, deep clean,
+errors, setup problems, Dyson unreachable): SmartThings > **Routines** > **+** > **If**: the Dyson >
+**Attention** > **Needs attention**; **Then**: **Notify members** with your own text. A second
+routine on **No problem** can tell you when it is fixed. The notification text is fixed; the device
+page shows the actual message.
+
+- A new problem notifies again, even while an earlier one is still there (filter due while the tank
+  is out). A problem going away, a re-send or a driver restart does not.
+- "Dyson not reachable" and its notification come only after the Dyson has been unreachable for
+  5 minutes, so a Wi-Fi drop or a reboot stays quiet. "Dyson not found on the network" and "Model
+  not detected" show at once but also notify only after 5 minutes. A wrong or missing password
+  notifies at once.
+
 ## Compared with the default (Matter) integration
 
 The MyDyson app can share the Dyson with SmartThings over Matter (Dyson app > Smart home > Matter
@@ -68,7 +83,7 @@ driver. Compared on the Purifier Humidify+Cool (358K):
 | Power, fan mode, fan speed | ✅ | ✅ |
 | Oscillation | on/off | 45°, 90°, Breeze, Custom angles |
 | Humidifier on/off, Auto, target | ❌ | ✅ |
-| Water tank and other warnings | ❌ | ✅ (Attention) |
+| Water tank and other warnings | ❌ | ✅ (Attention, with routine notifications) |
 | What the Dyson is doing now | ❌ | ✅ (Activity) |
 | Temperature, humidity, PM2.5, PM10 | ✅ | ✅ |
 | TVOC, NO₂ | level only | level and number |
@@ -91,10 +106,11 @@ src/init.lua               SmartThings side: lifecycle, connection loop, events,
 src/dyson.lua              Dyson protocol: topics, state parsing, levels, command payloads, mDNS pick
 src/mqtt.lua               Minimal MQTT 3.1.1 client (QoS 0), socket injected for testing
 src/driver_version.lua     Driver version string
-capabilities/              Custom capabilities oscillationAngle, activity, autoHumidity, targetHumidity, airQuality, attention
+capabilities/              Custom capabilities oscillationAngle, activity, autoHumidity, targetHumidity, airQuality, attention, attentionAlert
 presentation/              Current device configuration (app layout): input and server reply
 tools/dyson_credentials.py Gets the MQTT password from your Dyson account and shows it as a QR code
 tools/qr.py                Small stdlib-only QR code encoder used by the tool
+tools/sync_mode_lists.py   Copies the mode lists from src/dyson.lua into the device configuration
 test/unit_test.lua         Offline unit tests of dyson.lua and mqtt.lua (plain Lua 5.3)
 test/init_test.lua         init.lua against a fake SmartThings runtime, Dyson broker and clock
 test/live_test.lua         Talks to a real Dyson from your computer
@@ -288,6 +304,7 @@ flow against a fake API, a real Dyson mDNS reply, the profile update on a copy o
 
 ```bash
 python3 test/test_dyson_credentials.py
+python3 tools/sync_mode_lists.py --check   # device configuration matches the mode lists
 ```
 
 ### 2. Live test against the Dyson (from your computer)
@@ -322,7 +339,8 @@ several clients at once, so the hub stays connected while this runs.
   All values are re-sent 30 s and 2 min after connecting (SmartThings can drop events right after an
   update) and then hourly.
 - **Device page.** From the top: **Attention** (custom `attention`; a plain message such as "Water tank
-  removed", hidden while there is no problem), **Activity** (custom `activity`; Purifier, Humidifier,
+  removed", hidden while there is no problem; routines use custom `attentionAlert` instead, `detected`
+  while any message shows, else `clear`, not shown on the page), **Activity** (custom `activity`; Purifier, Humidifier,
   Night mode as balls: 🟢 running, 🟡 on but waiting, 🔴 stopped by a warning, ⚪ off, 🔵 deep clean),
   **Air Quality** (custom `airQuality`; Air quality, PM2.5, PM10, TVOC, NO₂, Formaldehyde as balls in
   Dyson's colours 🟢 🟡 🟠 🔴 🟣 ⚫), SmartThings' own rows, then the controls. The **Humidifier**
@@ -336,7 +354,7 @@ several clients at once, so the hub stays connected while this runs.
   current value through `state.alternatives`, which the server requires, so every possible text must be
   listed there (`pres_auto_humidity.json` lists "On (0%)" to "On (100%)").
 - **Changing a custom capability.** The hub caches capability definitions. After adding attributes to an existing capability, the hub kept the old definition and every new attribute event failed. Create a new capability instead, and create a new device configuration: the server stores the capability presentation inside the configuration, and an unchanged configuration keeps its old `vid`.
-- **Offline detection.** After each command the driver also asks for the state, which the Dyson always answers. No reply within 10 s, or no traffic for 35 s, counts as a dead link: the device goes offline in the app and the driver reconnects.
+- **Offline detection.** After each command the driver also asks for the state, which the Dyson always answers. No reply within 10 s, or no traffic for 35 s, counts as a dead link: the device goes offline in the app and the driver reconnects. Right after connecting, the state reply counts the same way, so a silent link does not keep an old message. After 5 minutes offline, Attention shows "Dyson not reachable" (`OFFLINE_ALERT_SECONDS` in `src/init.lua`).
 - **Warnings.** Besides `ercd`/`wacd` in the state, the Dyson publishes a fault report on `<type>/<serial>/status/faults` (`CURRENT-FAULTS`, about 90 entries, each `OK` or `FAIL`). The driver asks for it on connect, every 60 s and after every state change. `FAULT_TEXT`, `WARNING_TEXT` and `ERROR_TEXT` in `src/dyson.lua` turn entries into text; unknown ones show as "Dyson warning <key>" or "Dyson error <key>". Confirmed: `product-warnings.tnkp` = water tank removed. From the key names only: `tnke` tank empty, `fltr` filter, `cldu` deep clean due.
 - **TVOC value.** Dyson's 0-10 VOC index is sent in µg/m³, mapped onto the UBA indoor guide bands so
   each Dyson level lands in its band (`voc_ugm3` in `src/dyson.lua`). Not a real concentration.
@@ -353,6 +371,12 @@ several clients at once, so the hub stays connected while this runs.
 
 ## Pitfalls
 
+- **Modes in routines.** The routine editor offers only those `mode` values that are both in
+  `supportedModes` and in the presentation's `alternatives`. The standard `mode` presentation lists
+  only `exampleMode`, so without help every mode picker in routines is empty. The device
+  configuration patches the full list into each mode row (`/0/list/alternatives`). After changing a
+  mode list in `src/dyson.lua`, run `python3 tools/sync_mode_lists.py` and create a new device
+  configuration; `init_test.lua` and `sync_mode_lists.py --check` fail while they differ.
 - `config.yml` needs `permissions: lan: {}` for sockets. Permissions cannot change on an existing
   driver; changing them needs a new `packageKey`, which is a new driver.
 - The profile name passed to `try_create_device` must match the profile's `name:` field.

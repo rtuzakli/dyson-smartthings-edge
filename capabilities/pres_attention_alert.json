@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "states": [],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Attention",
+      "displayType": "state",
+      "state": {
+        "label": "{{alert.value}}",
+        "alternatives": [
+          {
+            "key": "detected",
+            "value": "Needs attention",
+            "type": "active"
+          },
+          {
+            "key": "clear",
+            "value": "No problem",
+            "type": "inactive"
+          }
+        ]
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Attention",
+        "displayType": "list",
+        "list": {
+          "alternatives": [
+            {
+              "key": "detected",
+              "value": "Needs attention",
+              "type": "active"
+            },
+            {
+              "key": "clear",
+              "value": "No problem",
+              "type": "inactive"
+            }
+          ],
+          "value": "alert.value",
+          "valueType": "string"
+        }
+      }
+    ],
+    "actions": []
+  }
+}

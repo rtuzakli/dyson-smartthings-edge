@@ -29,11 +29,12 @@ package.loaded["st.json"] = { encode = cjson.encode, decode = cjson.decode }
 local missing = {}
 local function attribute(cap, attr)
   return setmetatable({}, {
-    __call = function(_, value)
+    __call = function(_, value, extra)
+      local forced = extra and extra.state_change
       if type(value) == "table" and value.value ~= nil then
-        return { cap = cap, attr = attr, value = value.value, unit = value.unit }
+        return { cap = cap, attr = attr, value = value.value, unit = value.unit, state_change = forced }
       end
-      return { cap = cap, attr = attr, value = value }
+      return { cap = cap, attr = attr, value = value, state_change = forced }
     end,
     __index = function(_, enum) return function() return { cap = cap, attr = attr, value = enum } end end,
   })
@@ -73,6 +74,7 @@ package.loaded["mqtt"] = { new = function(opts)
   local client = {}
   function client:connect()
     broker.host, broker.user, broker.password = opts.host, opts.username, opts.password
+    if broker.refuse then return nil, broker.refuse end
     if broker.accept_password and opts.password ~= broker.accept_password then return nil, "CONNACK refused rc=5" end
     return true
   end
@@ -110,7 +112,8 @@ local function make_device(id, network_id, prefs)
   local d = { id = id, device_network_id = network_id, preferences = prefs, fields = {},
     profile = { components = setmetatable({}, { __index = function(_, k) return { id = k } end }) } }
   function d:emit_component_event(component, ev)
-    events[#events + 1] = { dev = self.id, comp = component.id, cap = ev.cap, attr = ev.attr, value = ev.value, unit = ev.unit }
+    events[#events + 1] = { dev = self.id, comp = component.id, cap = ev.cap, attr = ev.attr, value = ev.value, unit = ev.unit,
+      state_change = ev.state_change }
   end
   function d:get_field(k) return self.fields[k] end
   function d:set_field(k, v) self.fields[k] = v end
@@ -127,6 +130,12 @@ local function latest(comp, cap, attr)
   for i = #events, 1, -1 do
     local e = events[i]
     if e.comp == comp and e.cap == cap and e.attr == attr then return e.value, e.unit end
+  end
+end
+local function latest_event(comp, cap, attr)
+  for i = #events, 1, -1 do
+    local e = events[i]
+    if e.comp == comp and e.cap == cap and e.attr == attr then return e end
   end
 end
 local function count(comp, cap, attr)
@@ -185,6 +194,8 @@ eq(latest("main", AIR, "overall"), "🟡", "overall ball (HCHO fair)"); eq(lates
 local voc, unit = latest("main", "tvocMeasurement", "tvocLevel")
 eq(voc, 38, "tvoc mapped value"); eq(unit, "ug/m3", "tvoc unit")
 eq(latest("main", "fabrictitle08390.attention", "message"), "None", "no problem")
+local ALERT = "fabrictitle08390.attentionAlert"
+eq(latest("main", ALERT, "alert"), "clear", "no alert for routines")
 
 -- an early re-send (30 s after connect) clears the sent-values cache and re-emits at once
 local power_events = count("main", "switch", "switch")
@@ -222,12 +233,31 @@ broker.inbox = {
 }
 step()
 eq(latest("main", "fabrictitle08390.attention", "message"), "Water tank removed", "tank message")
+eq(latest("main", ALERT, "alert"), "detected", "tank warning raises the routine alert")
+eq(fields.alerted_problems, "Water tank removed", "announced problem kept on the hub")
 eq(latest("main", ACT, "purifier"), "🔴", "stopped by warning")
 eq(latest("status", "hardwareFault", "hardwareFault"), "clear", "warning is not a hardware fault")
 eq(logged("device reports"), 1, "fault logged once")
 clock = clock + 120
 step()
 eq(logged("device reports"), 1, "re-send does not repeat the fault log")
+eq(latest_event("main", ALERT, "alert").state_change, nil, "a re-send is not a new problem")
+-- a second problem while the alert is up notifies again; one going away does not
+local alerts_up = count("main", ALERT, "alert")
+broker.inbox = { { msg = "CURRENT-FAULTS", ["product-warnings"] = { tnkp = "FAIL", fltr = "FAIL" } } }
+step()
+eq(count("main", ALERT, "alert"), alerts_up + 1, "second problem sends the alert again")
+eq(latest_event("main", ALERT, "alert").state_change, true, "as a state change, so routines fire")
+broker.inbox = { { msg = "CURRENT-FAULTS", ["product-warnings"] = { tnkp = "FAIL", fltr = "OK" } } }
+step()
+eq(count("main", ALERT, "alert"), alerts_up + 1, "a problem going away does not notify")
+eq(fields.alerted_problems, "Water tank removed", "announced problems follow the current ones")
+-- tank back: alert clears
+local alerts = count("main", ALERT, "alert")
+broker.inbox = { { msg = "CURRENT-FAULTS", ["product-warnings"] = { tnkp = "OK" } } }
+step()
+eq(latest("main", ALERT, "alert"), "clear", "alert clears with the warning")
+eq(count("main", ALERT, "alert"), alerts + 1, "one clear event")
 
 -- hub cache lacks a new attribute: the value is skipped and the session keeps running
 missing[ACT .. ".nightMode"] = true
@@ -245,6 +275,35 @@ eq(logged("no reply to command within 10 s"), 1, "dead link detected")
 eq((device.offline_count or 0) > offline_before, true, "went offline after dead link")
 eq(requests("REQUEST-CURRENT-STATE") > state_requests + 1, true, "reconnected and asked for state again")
 eq(device.is_online, true, "online again after reconnect")
+
+-- unreachable: a short outage changes nothing, after 5 min Attention says so and the alert goes up.
+-- The fake Dyson stays silent, so the state request at connect times out and ends the session.
+broker.refuse = "connection refused"
+local down_at
+for _ = 1, 20 do
+  step()
+  if not device.is_online then down_at = down_at or clock end
+  if down_at and clock - down_at >= 60 then break end
+end
+eq(logged("no reply to state request within 10 s"), 1, "silent link after connect is dead")
+eq(latest("main", ALERT, "alert"), "clear", "no alert for a short outage")
+for _ = 1, 400 do
+  step()
+  if clock - down_at >= 5 * 60 + 60 then break end
+end
+eq(latest("main", "fabrictitle08390.attention", "message"), "Dyson not reachable", "long outage explained")
+eq(latest("main", ALERT, "alert"), "detected", "long outage raises the alert")
+-- back: the Dyson's own report clears both
+broker.refuse = nil
+broker.inbox = { { msg = "CURRENT-FAULTS", ["product-warnings"] = { tnkp = "OK" } } }
+for _ = 1, 70 do
+  step()
+  if device.is_online and #broker.inbox == 0 then break end
+end
+step()
+eq(device.is_online, true, "reconnected")
+eq(latest("main", "fabrictitle08390.attention", "message"), "None", "message cleared")
+eq(latest("main", ALERT, "alert"), "clear", "alert cleared")
 
 -- the profile carries the placeholder: the driver uses the password kept on the hub
 device.preferences.localPassword = "password"
@@ -298,12 +357,19 @@ local function attention(id)
     if e.dev == id and e.cap == "fabrictitle08390.attention" then return e.value end
   end
 end
+local function alert(id)
+  for i = #events, 1, -1 do
+    local e = events[i]
+    if e.dev == id and e.cap == ALERT then return e.value end
+  end
+end
 local dev3 = make_device("dev-3", "dyson:358:SER-3",
   { serialNumber = "SERIAL", productType = "auto", localPassword = "password", ipAddress = "0.0.0.0" })
 driver_cfg.lifecycle_handlers.init(nil, dev3)
 assert(coroutine.resume(tasks[#tasks]))
 eq(attention("dev-3"), "Enter the local MQTT password in Settings", "missing password explained")
 eq(dev3.is_online, false, "offline without password")
+eq(alert("dev-3"), "detected", "setup problem raises the routine alert")
 
 mdns_found = { { service_info = { name = "358_SER-4" }, host_info = { address = "192.168.1.52" } } }
 broker.accept_password = "right"
@@ -312,6 +378,38 @@ local dev4 = make_device("dev-4", "dyson:358:SER-4",
 driver_cfg.lifecycle_handlers.init(nil, dev4)
 assert(coroutine.resume(tasks[#tasks]))
 eq(attention("dev-4"), "Local MQTT password is wrong", "wrong password explained")
+eq(alert("dev-4"), "detected", "wrong password raises the alert at once")
 broker.accept_password = nil
+
+-- not found before the first connect: explained at once, but no alert until it lasts 5 min
+mdns_found = {}
+local dev5 = make_device("dev-5", "dyson:358:SER-5",
+  { serialNumber = "SERIAL", productType = "358K", localPassword = "pw5", ipAddress = "0.0.0.0" })
+driver_cfg.lifecycle_handlers.init(nil, dev5)
+assert(coroutine.resume(tasks[#tasks]))
+eq(attention("dev-5"), "Dyson not found on the network", "not found explained at once")
+eq(alert("dev-5"), nil, "a fresh not-found does not notify")
+
+-- routines list a mode only if the device config names it: its alternatives must match the driver's modes
+local dyson = require "dyson"
+local f = assert(io.open("presentation/device_config.json"))
+local config = cjson.decode(f:read("a"))
+f:close()
+local MODE_LISTS = { humidifier = dyson.HUMIDITY_MODES, oscillation = dyson.OSCILLATION_MODES,
+  airflow = dyson.AIRFLOW_MODES, sleepTimer = dyson.SLEEP_TIMER_MODES, waterHardness = dyson.WATER_HARDNESS_MODES }
+local checked = 0
+for _, kind in ipairs({ "conditions", "actions" }) do
+  for _, e in ipairs(config.automation[kind]) do
+    local modes = e.capability == "mode" and MODE_LISTS[e.component]
+    if modes then
+      local alts = e.patch[1] and e.patch[1].value or {}
+      local name = "routine " .. kind .. " " .. e.component
+      eq(#alts, #modes, name .. " count")
+      for i, m in ipairs(modes) do eq(alts[i].key, m, name .. " " .. i) end
+      checked = checked + 1
+    end
+  end
+end
+eq(checked, 10, "every mode row in routines has its list")
 
 print("INIT OK")

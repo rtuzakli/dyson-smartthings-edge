@@ -186,6 +186,14 @@ eq(df.warning_text, "Dyson error amf1, Dyson warning etwd", "unknown fault keys 
 eq(df.fault, true, "product error is a hardware fault")
 dyson.merge(rf, { msg = "CURRENT-FAULTS", ["product-warnings"] = { tnkp = "OK" } })
 eq(dyson.derive(rf).warning_text, "None", "faults cleared")
+eq(dyson.attention_alert("None"), "clear", "no problem, no alert")
+eq(dyson.attention_alert("Water tank empty"), "detected", "any message is an alert")
+eq(dyson.attention_alert(nil), nil, "unknown state sends nothing")
+local _, parts = dyson.warning_text("NONE", "NONE", { ["product-warnings.tnkp"] = "FAIL", ["product-warnings.fltr"] = "FAIL" })
+eq(#parts, 2, "every problem listed")
+eq(dyson.has_new_problem({ ["Water tank removed"] = true }, { "Water tank removed" }), false, "same problem is not new")
+eq(dyson.has_new_problem({ ["Water tank removed"] = true }, { "Water tank removed", "Replace the filter" }), true, "added problem is new")
+eq(dyson.has_new_problem({ ["Water tank removed"] = true, ["Replace the filter"] = true }, { "Replace the filter" }), false, "fewer problems is not new")
 eq(dyson.topics("358K", "S").faults, "358K/S/status/faults", "faults topic")
 -- humidity target: picker stays "Auto"; target shown separately
 local rh = {}
